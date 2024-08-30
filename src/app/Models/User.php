@@ -6,7 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
+/**
+ * @property string name
+ * @property string email
+ * @property Collection pets
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -45,7 +51,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function pets(){
+    public function pets()
+    {
         return $this->hasMany(Pet::class);
     }
 }

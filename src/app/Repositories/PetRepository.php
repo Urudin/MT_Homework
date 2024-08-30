@@ -3,23 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Pet;
-use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 
 class PetRepository
 {
     const PAGINATED_RECORDS = 10;
-
-    /**
-     * @param $id
-     * @return Pet
-     * Finds an existing pet
-     */
-    public function find($id): Pet
-    {
-        return Pet::findOrFail($id);
-    }
 
     /**
      * @param array $data
@@ -29,6 +18,17 @@ class PetRepository
     public function create(array $data): Pet
     {
         return auth()->user()->pets()->create($data);
+    }
+
+    /**
+     * @param Pet $pet
+     * @param array $data
+     * @return Pet
+     */
+    public function update(Pet $pet, array $data): Pet{
+        $pet->update($data);
+        $pet->refresh();
+        return $pet;
     }
 
     /**
@@ -47,17 +47,5 @@ class PetRepository
             $query->where('status', $status);
         }
         return $query->paginate(self::PAGINATED_RECORDS);
-    }
-
-    /**
-     * @param $id
-     * @param $data
-     * @return void
-     * Updates an already existing pet
-     */
-    public function updatePet($id, $data): void
-    {
-        $pet = $this->find($id);
-        $pet->update($data);
     }
 }

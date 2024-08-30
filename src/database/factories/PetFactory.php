@@ -17,8 +17,10 @@ class PetFactory extends Factory
      */
     public function definition(): array
     {
-        $species = $this->faker->randomElement(['dog', 'cat', 'bird', 'other']);
-        $breeds = match($species){
+        //Get a valid species
+        $species = $this->faker->randomElement(Pet::SPECIES);
+        //Get a random breed matching for the species
+        $breed = match ($species) {
             'dog' => ['golden retriever', 'cane corso', 'sausage dog', 'bulldog'],
             'cat' => ['persian', 'siamese', 'maine coon', 'british shorthair'],
             'bird' => ['parrot', 'canary', 'finch', 'cockatiel'],
@@ -27,7 +29,7 @@ class PetFactory extends Factory
         return [
             'name' => $this->faker->randomElement(['Bella', 'Max', 'Daisy', 'Charlie', 'Luna', 'Rocky', 'Molly', 'Milo', 'Chloe', 'Bailey', 'Oliver', 'Ruby', 'Leo', 'Sadie', 'Jasper',]),
             'species' => $species,
-            'breed' => $this->faker->randomElement($breeds),
+            'breed' => $this->faker->randomElement($breed),
             'age' => $this->faker->numberBetween(1, 20),
             'status' => $this->faker->randomElement(Pet::STATUSES),
             'description' => $this->faker->text(100),

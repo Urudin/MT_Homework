@@ -7,18 +7,21 @@ use App\Http\Requests\PetUpdateRequest;
 use App\Models\Pet;
 use App\Services\PetService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class PetController extends Controller
 {
-    public function __construct(protected PetService $petService){
+    public function __construct(protected PetService $petService)
+    {
     }
 
-    public function show(Request $request, Pet $pet){
+    public function show(Request $request, Pet $pet)
+    {
         $this->petService->authorizeOwner($pet);
         return view('pets.show', ['pet' => $pet]);
     }
-    public function index(Request $request){
+
+    public function index(Request $request)
+    {
         $pets = $this->petService->getPetList($request->get('species'), $request->get('status'));
         return view('pets.index', compact('pets'));
     }
@@ -29,23 +32,26 @@ class PetController extends Controller
         return redirect(route('pets.index'));
     }
 
-    public function update(PetUpdateRequest $request, Pet $pet){
-        $this->petService->authorizeOwner($pet);
+    public function update(PetUpdateRequest $request, Pet $pet)
+    {
         $this->petService->updatePet($pet, $request->all());
         return back();
     }
 
-    public function destroy(Request $request, Pet $pet){
-        $this->petService->authorizeOwner($pet);
+    public function destroy(Request $request, Pet $pet)
+    {
         $this->petService->deletePet($pet);
         return back();
     }
 
-    public function create(){
-        return view('pets.create');
+    public function create()
+    {
+        //The same view can be used as for edit for easier maintainability
+        return view('pets.edit');
     }
 
-    public function edit(Pet $pet){
+    public function edit(Pet $pet)
+    {
         $this->petService->authorizeOwner($pet);
         return view('pets.edit', ['pet' => $pet]);
     }

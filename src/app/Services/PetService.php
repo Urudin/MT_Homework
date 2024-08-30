@@ -8,28 +8,34 @@ use Illuminate\Support\Facades\Gate;
 
 class PetService
 {
-    public function __construct(protected PetRepository $petRepository){}
+    public function __construct(protected PetRepository $petRepository)
+    {
+    }
 
     public function createPet(array $data)
     {
-        // Validate, sanitize, send welcome email, etc.
         return $this->petRepository->create($data);
     }
 
-    public function deletePet(Pet $pet){
+    public function deletePet(Pet $pet)
+    {
+        $this->authorizeOwner($pet);
         return $pet->delete();
     }
 
-    public function updatePet(Pet $pet, array $data){
-        $pet->update($data);
+    public function updatePet(Pet $pet, array $data)
+    {
+        return $this->petRepository->update($pet, $data);
     }
 
-    public function getPetList(?String $species, ?String $status){
+    public function getPetList(?string $species, ?string $status)
+    {
         return $this->petRepository->listPets($species, $status);
     }
 
-    public function authorizeOwner(Pet $pet) :void{
-        if (! Gate::allows('owns-pet', $pet)) {
+    public function authorizeOwner(Pet $pet): void
+    {
+        if (!Gate::allows('owns-pet', $pet)) {
             abort(403);
         }
     }

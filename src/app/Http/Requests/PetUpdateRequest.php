@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class PetUpdateRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class PetUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('owns-pet', request()->route('pet'));
     }
 
     /**
